@@ -2,17 +2,23 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Header from './components/Header';
-import Contacts from './components/Contacts';
+import Header from './components/layout/Header';
+import Contacts from './components/contacts/Contacts';
+import AddContact from './components/contacts/AddContact';
+
+import { Provider } from './context';
 
 class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <div className="container">
-          <Contacts />
+      <Provider>
+        <div className="App">
+          <div className="container">
+            <AddContact />
+            <Contacts />
+          </div>
         </div>
-      </div>
+      </Provider>
     );
   }
 }
