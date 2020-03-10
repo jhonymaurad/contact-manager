@@ -7,7 +7,8 @@ export default class AddContact extends React.Component {
   state = {
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    errors: {}
   };
 
   onChange = e => {
@@ -17,18 +18,34 @@ export default class AddContact extends React.Component {
   onSubmit = (dispatch, e) => {
     e.preventDefault();
     const { name, email, phone } = this.state;
+
+    // check for errors
+    if (name === '') {
+      this.setState({ errors: { name: 'Name is required' } });
+      return;
+    }
+    if (email === '') {
+      this.setState({ errors: { email: 'Email is required' } });
+      return;
+    }
+    if (phone === '') {
+      this.setState({ errors: { phone: 'Phone is required' } });
+      return;
+    }
+
     const newContact = { id: uuid(), name, email, phone };
 
     dispatch({ type: 'ADD_CONTACT', payload: newContact });
     this.setState({
       name: '',
       email: '',
-      phone: ''
+      phone: '',
+      errors: {}
     });
   };
 
   render() {
-    const { name, email, phone } = this.state;
+    const { name, email, phone, errors } = this.state;
 
     return (
       <Consumer>
@@ -45,6 +62,7 @@ export default class AddContact extends React.Component {
                     placeholder="Enter Name ..."
                     value={name}
                     onChange={this.onChange}
+                    error={errors.name}
                   />
                   <TextInputGroup
                     label="Email"
@@ -53,12 +71,14 @@ export default class AddContact extends React.Component {
                     placeholder="Enter Email ..."
                     value={email}
                     onChange={this.onChange}
+                    error={errors.email}
                   />
                   <TextInputGroup
                     label="Phone"
                     name="phone"
                     placeholder="Enter Phone ..."
                     value={phone}
+                    error={errors.phone}
                     onChange={this.onChange}
                   />
 
