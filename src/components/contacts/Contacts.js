@@ -12,9 +12,16 @@ class Contacts extends React.Component {
 
           return (
             <>
-              {contacts.map(contact => (
-                <Contact key={contact.id} contact={contact} />
-              ))}
+              <h1 className="display-4 mb-2">
+                <span className="text-danger">Contact</span> List
+              </h1>
+              {contacts ? (
+                contacts.map(contact => (
+                  <Contact key={contact.id} contact={contact} />
+                ))
+              ) : (
+                <div>loading</div>
+              )}
             </>
           );
         }}

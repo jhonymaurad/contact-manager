@@ -2,13 +2,28 @@ import React from 'react';
 import { Consumer } from '../../context';
 import TextInputGroup from '../layout/TextInputGroup';
 import axios from 'axios';
-export default class AddContact extends React.Component {
+
+export default class EditContact extends React.Component {
   state = {
     name: '',
     email: '',
     phone: '',
     errors: {}
   };
+
+  async componentDidMount() {
+    const { id } = this.props.match.params;
+    const res = await axios.get(
+      `https://jsonplaceholder.typicode.com/users/${id}`
+    );
+
+    const { name, email, phone } = res.data;
+    this.setState({
+      name,
+      email,
+      phone
+    });
+  }
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -32,14 +47,20 @@ export default class AddContact extends React.Component {
       return;
     }
 
-    const newContact = { name, email, phone };
+    const updateContact = {
+      name,
+      email,
+      phone
+    };
 
-    const newUser = await axios.post(
-      `https://jsonplaceholder.typicode.com/users`,
-      newContact
+    const { id } = this.props.match.params;
+
+    const res = await axios.put(
+      `https://jsonplaceholder.typicode.com/users/${id}`,
+      updateContact
     );
 
-    dispatch({ type: 'ADD_CONTACT', payload: newUser.data });
+    dispatch({ type: 'UPDATE_CONTACT', payload: res.data });
 
     this.setState({
       name: '',
@@ -60,7 +81,7 @@ export default class AddContact extends React.Component {
           const { dispatch } = value;
           return (
             <div className="card mb-3">
-              <div className="card-header">Add Contact</div>
+              <div className="card-header">Edit Contact</div>
               <div className="card-body">
                 <form onSubmit={this.onSubmit.bind(this, dispatch)}>
                   <TextInputGroup
@@ -91,7 +112,7 @@ export default class AddContact extends React.Component {
 
                   <input
                     type="submit"
-                    value="Add Contact"
+                    value="Edit Contact"
                     className="btn btn-light btn-block"
                   />
                 </form>
